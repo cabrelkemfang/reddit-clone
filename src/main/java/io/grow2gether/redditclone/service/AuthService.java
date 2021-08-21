@@ -15,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,12 +36,14 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
-        User user = new User();
-        user.setEmail(registerRequest.getEmail());
-        user.setUsername(registerRequest.getUsername());
-        user.setEnabled(false);
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreatedAt(Instant.now());
+
+        User user = User.builder().username(registerRequest.getUsername())
+                .email(registerRequest.getEmail())
+                .enabled(false)
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .createdAt(Instant.now())
+                .build();
+
         userRepository.save(user);
         String token = generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail("Please Activate Your Account ", user.getEmail(), "http://localhost:8080/api/auth/accountverification/" + token));
@@ -77,5 +80,13 @@ public class AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generatedToken(authentication);
         return new AuthenticationResponse(token, loginRequest.getUsername());
+    }
+
+    @Transactional()
+    public User getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getUsername()));
     }
 }

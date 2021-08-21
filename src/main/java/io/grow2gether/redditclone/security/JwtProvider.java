@@ -1,10 +1,11 @@
 package io.grow2gether.redditclone.security;
 
 import io.grow2gether.redditclone.exceptions.SpringRedditException;
-import io.grow2gether.redditclone.model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -33,11 +34,16 @@ public class JwtProvider {
     }
 
     public String generatedToken(Authentication authentication) {
-        User pricipal = (User) authentication.getPrincipal();
+        User principal = (User) authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(pricipal.getUsername())
+                .setSubject(principal.getUsername())
                 .signWith(getPrivateKey())
                 .compact();
+    }
+
+    public boolean validateToken(String jwt) {
+        Jwts.parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
+        return true;
     }
 
     private PrivateKey getPrivateKey() {
@@ -47,4 +53,24 @@ public class JwtProvider {
             throw new SpringRedditException("Exception occured while retrieving public key from keystore");
         }
     }
+
+    private PublicKey getPublickey() {
+        try {
+            return keyStore.getCertificate("springblog").getPublicKey();
+        } catch (KeyStoreException e) {
+            throw new SpringRedditException("Exception occured while " +
+                    "retrieving public key from keystore");
+        }
+    }
+
+    public String getUsernameFromJwt(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getPublickey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
 }

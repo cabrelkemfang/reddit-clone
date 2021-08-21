@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
-
-import javax.annotation.Generated;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
@@ -33,6 +31,6 @@ public class Post {
     private User user;
     private Instant createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id",referencedColumnName = "id")
+    @JoinColumn(name = "subredditId",referencedColumnName = "id")
     private Subreddit subreddit;
 }
