@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class SubredditDto {
     private String name;
     private String description;
+    private String duration;
     private Integer numberOfPosts;
 }

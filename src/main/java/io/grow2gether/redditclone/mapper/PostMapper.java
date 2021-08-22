@@ -1,5 +1,6 @@
 package io.grow2gether.redditclone.mapper;
 
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 import io.grow2gether.redditclone.dto.PostRequest;
 import io.grow2gether.redditclone.dto.PostResponse;
 import io.grow2gether.redditclone.model.Post;
@@ -12,14 +13,21 @@ import org.mapstruct.factory.Mappers;
 
 
 @Mapper(componentModel = "spring")
-public interface PostMapper {
+public abstract class PostMapper {
     SubredditMapper INSTANCE = Mappers.getMapper(SubredditMapper.class);
-    @Mapping(target = "description", source = "postRequest.description")
-    @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
-    Post map(PostRequest postRequest, Subreddit subreddit, User user);
 
-    @InheritInverseConfiguration
-    @Mapping(target = "userName", source = "user.username")
-    @Mapping(target = "subredditName", source = "subreddit.name")
-    PostResponse mapToDto(Post post);
+//    @Mapping(target = "userName", source = "user.username")
+//    @Mapping(target = "subredditName", source = "subreddit.name")
+//    @Mapping(target = "voteCount", constant = "0")
+//    @Mapping(target = "duration",expression = "java(java(getDuration(post))")
+    public abstract PostResponse mapToDto(Post post);
+
+//    @InheritInverseConfiguration
+//    @Mapping(target = "description", source = "postRequest.description")
+//    @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
+    public abstract Post map(PostRequest postRequest, Subreddit subreddit, User user);
+
+    String getDuration(Post post) {
+        return TimeAgo.using(post.getCreatedAt().toEpochMilli());
+    }
 }

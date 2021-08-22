@@ -14,15 +14,16 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
-    @Mapping(target = "postId", expression = "java(comment.getPost().getPostId())")
-    @Mapping(target = "userName", expression = "java(comment.getUser().getUsername())")
-    CommentResponse mapToDto(Comment comment);
-
-    @InheritInverseConfiguration
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "text", source = "commentRequest.text")
-    @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
-    Comment map(CommentRequest commentRequest, Post post, User user);
+//    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
+//
+////    @Mapping(target = "post_id", expression = "java(comment.getPost().getPostId())")
+//    @Mapping(target = "userName", expression = "java(comment.getUser().getUsername())")
+//    CommentResponse mapToDto(Comment comment);
+//
+//    @InheritInverseConfiguration
+//    @Mapping(target = "id", ignore = true)
+//    @Mapping(target = "text", source = "commentRequest.text")
+//    @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
+//    Comment map(CommentRequest commentRequest, Post post, User user);
 
 }
