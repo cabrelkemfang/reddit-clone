@@ -1,6 +1,7 @@
 package io.grow2gether.redditclone.config;
 
 
+import io.grow2gether.redditclone.security.JwtAuthEntryPoint;
 import io.grow2gether.redditclone.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-//    private final  RESTAuthenticationEntryPoint authenticationEntryPoint;
+    private final JwtAuthEntryPoint authenticationEntryPoint;
 
     @Bean(BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -49,9 +50,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated();
-//                .and()
-//                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+                .authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
