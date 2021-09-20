@@ -1,5 +1,7 @@
 package io.grow2gether.redditclone.controller;
 
+import io.grow2gether.redditclone.dto.DataResponse;
+import io.grow2gether.redditclone.dto.PageableResult;
 import io.grow2gether.redditclone.dto.PostRequest;
 import io.grow2gether.redditclone.dto.PostResponse;
 import io.grow2gether.redditclone.service.PostService;
@@ -18,24 +20,26 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<Void> createdPost(@RequestBody  PostRequest postRequest) {
-        postService.save(postRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public DataResponse<Void> createdPost(@RequestBody PostRequest postRequest) {
+        return postService.save(postRequest);
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getAllPost() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.postService.getAllPost());
+    public PageableResult<PostResponse> getAllPost(@RequestParam(required = false, defaultValue = "1") int page,
+                                                   @RequestParam(required = false, defaultValue = "10") int size) {
+        return this.postService.getAllPosts(page, size);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.postService.getPost(id));
+    public DataResponse<PostResponse> getPost(@PathVariable Long id) {
+        return this.postService.getPost(id);
     }
 
     @GetMapping("/by-subreddit/{id}")
-    public ResponseEntity<List<PostResponse>> getPostBySubreddit(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.postService.getPostBySubreddit(id));
+    public PageableResult<PostResponse> getPostBySubreddit(@RequestParam(required = false, defaultValue = "1") int page,
+                                                           @RequestParam(required = false, defaultValue = "10") int size,
+                                                           @PathVariable Long id) {
+        return this.postService.getPostBySubreddit(page, size, id);
 
     }
 

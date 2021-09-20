@@ -6,11 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class SubredditDto {
-    private String name;
-    private String description;
-    private Integer numberOfPosts;
+@AllArgsConstructor
+@Builder
+public class ValidationError {
+    private String code;
+    private String message;
 }

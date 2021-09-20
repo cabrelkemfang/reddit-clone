@@ -1,13 +1,19 @@
 package io.grow2gether.redditclone.service;
 
+import io.grow2gether.redditclone.dto.DataResponse;
+import io.grow2gether.redditclone.dto.PageableResult;
 import io.grow2gether.redditclone.dto.SubredditDto;
 import io.grow2gether.redditclone.exceptions.SpringRedditException;
 import io.grow2gether.redditclone.mapper.SubredditMapper;
+import io.grow2gether.redditclone.model.Post;
 import io.grow2gether.redditclone.model.Subreddit;
 import io.grow2gether.redditclone.model.User;
 import io.grow2gether.redditclone.repository.SubredditRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,22 +30,26 @@ public class SubredditService {
 
 
     @Transactional
-    public SubredditDto save(SubredditDto subredditDto) {
-        User user = authService.getCurrentUser();
-        Subreddit subreddit = subredditRepository.save(subredditMapper.mapToDto(subredditDto, user));
-        return subredditMapper.map(subreddit);
+    public DataResponse<Void> save(SubredditDto subredditDto) {
+        subredditRepository.save(subredditMapper.mapToEntity(subredditDto, authService.getCurrentUser()));
+        return new DataResponse<>("Subreddit Created Successfully", HttpStatus.CREATED.value());
     }
 
 
-    public List<SubredditDto> getAllSubreddit() {
-        return subredditRepository.findAll().stream()
-                .map(subredditMapper::map)
-                .collect(Collectors.toList());
+    public PageableResult<SubredditDto> getAllSubreddit(int page, int size) {
+        Page<Subreddit> subreddit = subredditRepository.findAll(PageRequest.of(page - 1, size));
+
+        return new PageableResult<>(page,
+                size,
+                subreddit.getTotalElements(),
+                subreddit.getTotalPages(),
+                subreddit.getContent().stream().map(subredditMapper::mapToDto).collect(Collectors.toList()));
     }
 
     public SubredditDto getSubreddit(Long id) {
-        Subreddit subreddit = this.subredditRepository.findById(id).orElseThrow(() -> new SpringRedditException("Subreddit not found"));
-        return subredditMapper.map(subreddit);
+        Subreddit subreddit = this.subredditRepository.findById(id)
+                .orElseThrow(() -> new SpringRedditException("Subreddit not found"));
+        return subredditMapper.mapToDto(subreddit);
     }
 
 }

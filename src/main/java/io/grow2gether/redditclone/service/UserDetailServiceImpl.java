@@ -27,7 +27,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Transactional()
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
-        User user = this.userRepository.findByUsername(s).orElseThrow(() -> new SpringRedditException("No user found"));
+        User user = this.userRepository.findByUsername(s).orElseThrow(() -> new SpringRedditException("UserName or password Not Correct"));
         return new org.springframework.security
                 .core.userdetails.User(user.getUsername(), user.getPassword(), user.isEnabled(),
                 true, true, true, getAuthorities("USER"));

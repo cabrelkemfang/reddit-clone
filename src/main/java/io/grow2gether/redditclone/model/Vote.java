@@ -8,15 +8,17 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Data
+
 @Entity
 @Builder
 @AllArgsConstructor
+@Data
 @NoArgsConstructor
 public class Vote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long voteId;
+    @Enumerated(value = EnumType.STRING)
     private VoteType voteType;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postId", referencedColumnName = "postId")

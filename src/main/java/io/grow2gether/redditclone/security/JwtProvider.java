@@ -3,6 +3,7 @@ package io.grow2gether.redditclone.security;
 import io.grow2gether.redditclone.exceptions.SpringRedditException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -15,6 +16,7 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 @Service
+@Slf4j
 public class JwtProvider {
 
     private KeyStore keyStore;
@@ -42,6 +44,8 @@ public class JwtProvider {
     }
 
     public boolean validateToken(String jwt) {
+        System.out.println(jwt);
+        log.info(jwt);
         Jwts.parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
         return true;
     }
