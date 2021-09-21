@@ -1,6 +1,7 @@
 package io.grow2gether.redditclone.controller;
 
 import io.grow2gether.redditclone.dto.AuthenticationResponse;
+import io.grow2gether.redditclone.dto.DataResponse;
 import io.grow2gether.redditclone.dto.LoginRequest;
 import io.grow2gether.redditclone.dto.RegisterRequest;
 import io.grow2gether.redditclone.service.AuthService;
@@ -19,19 +20,17 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
-        authService.signup(registerRequest);
-        return new ResponseEntity<>("User Registration Successful", HttpStatus.OK);
+    public DataResponse<Void> signup(@RequestBody RegisterRequest registerRequest) {
+        return authService.signup(registerRequest);
     }
 
     @GetMapping("/accountverification/{token}")
-    public ResponseEntity<String> verifyAccount(@PathVariable String token) {
-        authService.verifyAccount(token);
-        return new ResponseEntity<>("Account Activated Succesfully", HttpStatus.OK);
+    public DataResponse<Void> verifyAccount(@PathVariable String token) {
+        return authService.verifyAccount(token);
     }
 
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
-      return  authService.login(loginRequest);
+        return authService.login(loginRequest);
     }
 }

@@ -1,5 +1,6 @@
 package io.grow2gether.redditclone.service;
 
+import io.grow2gether.redditclone.dto.DataResponse;
 import io.grow2gether.redditclone.dto.VoteRequest;
 import io.grow2gether.redditclone.exceptions.SpringRedditException;
 import io.grow2gether.redditclone.mapper.VoteMapper;
@@ -10,6 +11,7 @@ import io.grow2gether.redditclone.model.VoteType;
 import io.grow2gether.redditclone.repository.PostRepository;
 import io.grow2gether.redditclone.repository.VoteRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,7 +27,7 @@ public class VoteService {
     private final VoteMapper voteMapper;
 
     @Transactional
-    public void vote(VoteRequest voteRequest) {
+    public DataResponse<Void> vote(VoteRequest voteRequest) {
         Post post = getPostById(voteRequest.getPostId());
         User currentUser = this.authService.getCurrentUser();
         Optional<Vote> vote = this.voteRepository.findTopByUserAndPostOrderByVoteIdDesc(currentUser, post);
@@ -41,6 +43,7 @@ public class VoteService {
         }
         this.voteRepository.save(voteMapper.mapToEntity(voteRequest, post, currentUser));
         this.postRepository.save(post);
+        return new DataResponse<>("Vote register Successfully", HttpStatus.CREATED.value());
     }
 
     private Post getPostById(long postId) {

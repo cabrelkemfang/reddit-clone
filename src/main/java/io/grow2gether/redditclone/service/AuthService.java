@@ -1,6 +1,7 @@
 package io.grow2gether.redditclone.service;
 
 import io.grow2gether.redditclone.dto.AuthenticationResponse;
+import io.grow2gether.redditclone.dto.DataResponse;
 import io.grow2gether.redditclone.dto.LoginRequest;
 import io.grow2gether.redditclone.dto.RegisterRequest;
 import io.grow2gether.redditclone.exceptions.SpringRedditException;
@@ -11,6 +12,8 @@ import io.grow2gether.redditclone.repository.UserRepository;
 import io.grow2gether.redditclone.repository.VerificationTokenRepository;
 import io.grow2gether.redditclone.security.JwtProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,9 +38,10 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     @Transactional
-    public void signup(RegisterRequest registerRequest) {
+    public DataResponse<Void> signup(RegisterRequest registerRequest) {
 
-        User user = User.builder().username(registerRequest.getUsername())
+        User user = User.builder()
+                .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
                 .enabled(false)
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
@@ -47,6 +51,7 @@ public class AuthService {
         userRepository.save(user);
         String token = generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail("Please Activate Your Account ", user.getEmail(), "http://localhost:8080/api/auth/accountverification/" + token));
+        return new DataResponse<>("User Registration Successful", HttpStatus.OK.value());
     }
 
     private String generateVerificationToken(User user) {
@@ -61,10 +66,11 @@ public class AuthService {
         return token;
     }
 
-    public void verifyAccount(String token) {
+    public DataResponse<Void> verifyAccount(String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
                 .orElseThrow(() -> new SpringRedditException("Invalid token"));
         fetchUserAndEnable(verificationToken);
+        return new DataResponse<>("Account Activated Succesfully", HttpStatus.OK.value());
     }
 
 

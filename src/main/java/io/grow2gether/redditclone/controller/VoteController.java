@@ -1,5 +1,6 @@
 package io.grow2gether.redditclone.controller;
 
+import io.grow2gether.redditclone.dto.DataResponse;
 import io.grow2gether.redditclone.dto.VoteRequest;
 import io.grow2gether.redditclone.model.Vote;
 import io.grow2gether.redditclone.service.VoteService;
@@ -18,9 +19,8 @@ public class VoteController {
     private final VoteService voteService;
 
     @PostMapping
-    public ResponseEntity<Void> vote(@RequestBody VoteRequest voteRequest) {
-        this.voteService.vote(voteRequest);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public DataResponse<Void> vote(@RequestBody VoteRequest voteRequest) {
+        return this.voteService.vote(voteRequest);
     }
 
 }
