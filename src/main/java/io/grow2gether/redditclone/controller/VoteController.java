@@ -5,6 +5,7 @@ import io.grow2gether.redditclone.dto.VoteRequest;
 import io.grow2gether.redditclone.model.Vote;
 import io.grow2gether.redditclone.service.VoteService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/votes")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VoteController {
     private final VoteService voteService;
 

@@ -14,6 +14,7 @@ import io.grow2gether.redditclone.repository.PostRepository;
 import io.grow2gether.redditclone.repository.SubredditRepository;
 import io.grow2gether.redditclone.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class PostService {
     private final SubredditRepository subredditRepository;

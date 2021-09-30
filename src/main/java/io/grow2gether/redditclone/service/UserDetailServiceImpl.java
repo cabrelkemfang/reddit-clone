@@ -4,6 +4,7 @@ import io.grow2gether.redditclone.exceptions.SpringRedditException;
 import io.grow2gether.redditclone.model.User;
 import io.grow2gether.redditclone.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,7 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class UserDetailServiceImpl implements UserDetailsService {
 

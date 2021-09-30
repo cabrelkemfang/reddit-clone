@@ -10,6 +10,7 @@ import io.grow2gether.redditclone.model.Subreddit;
 import io.grow2gether.redditclone.model.User;
 import io.grow2gether.redditclone.repository.SubredditRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class SubredditService {
     private final SubredditRepository subredditRepository;

@@ -11,6 +11,7 @@ import io.grow2gether.redditclone.model.VoteType;
 import io.grow2gether.redditclone.repository.PostRepository;
 import io.grow2gether.redditclone.repository.VoteRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VoteService {
 
     private final VoteRepository voteRepository;

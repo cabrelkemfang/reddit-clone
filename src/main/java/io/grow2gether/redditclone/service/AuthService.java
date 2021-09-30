@@ -12,6 +12,7 @@ import io.grow2gether.redditclone.repository.UserRepository;
 import io.grow2gether.redditclone.repository.VerificationTokenRepository;
 import io.grow2gether.redditclone.security.JwtProvider;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthService {
 
     private final PasswordEncoder passwordEncoder;

@@ -12,6 +12,7 @@ import io.grow2gether.redditclone.repository.CommentRepository;
 import io.grow2gether.redditclone.repository.PostRepository;
 import io.grow2gether.redditclone.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CommentService {
 
     private final PostRepository postRepository;

@@ -21,13 +21,13 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException e) throws IOException, ServletException {
-        log.info("Responding with unauthorized error. Message - {}", e.getMessage());
 
         ErrorValidatorDetail errorDetails = ErrorValidatorDetail.builder()
                 .status(HttpStatus.UNAUTHORIZED.value())
                 .message(e.getMessage())
                 .build();
         response.setContentType("application/json");
+
 //        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
 
         OutputStream out = response.getOutputStream();

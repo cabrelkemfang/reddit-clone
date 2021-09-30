@@ -10,12 +10,13 @@ import io.grow2gether.redditclone.model.VoteType;
 import io.grow2gether.redditclone.repository.CommentRepository;
 import io.grow2gether.redditclone.repository.VoteRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PostMapper {
     private final VoteRepository voteRepository;
     private final CommentRepository commentRepository;
@@ -31,7 +32,7 @@ public class PostMapper {
                 .voteCount(post.getVoteCount())
                 .commentCount(commentRepository.countByPost(post))
                 .userName(post.getUser().getUsername())
-//                .duration(TimeAgo.using(post.getCreatedAt().toEpochMilli()))
+                .duration(TimeAgo.using(post.getCreatedAt().toEpochMilli()))
                 .subredditName(post.getSubreddit().getName())
                 .build();
     }
