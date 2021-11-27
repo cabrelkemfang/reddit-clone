@@ -18,16 +18,13 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
-
+        ObjectMapper mapper = new ObjectMapper();
         ErrorValidatorDetail errorDetails = ErrorValidatorDetail.builder()
                 .status(HttpStatus.FORBIDDEN.value())
                 .message(e.getMessage())
                 .build();
         response.setContentType("application/json");
 
-        OutputStream out = response.getOutputStream();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(out, errorDetails);
-        out.flush();
+        response.getWriter().write(mapper.writeValueAsString(errorDetails));
     }
 }

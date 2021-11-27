@@ -21,6 +21,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
                          AuthenticationException e) throws IOException, ServletException {
+        ObjectMapper mapper = new ObjectMapper();
 
         ErrorValidatorDetail errorDetails = ErrorValidatorDetail.builder()
                 .status(HttpStatus.UNAUTHORIZED.value())
@@ -28,11 +29,6 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
                 .build();
         response.setContentType("application/json");
 
-//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-
-        OutputStream out = response.getOutputStream();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(out, errorDetails);
-        out.flush();
+        response.getWriter().write(mapper.writeValueAsString(errorDetails));
     }
 }
