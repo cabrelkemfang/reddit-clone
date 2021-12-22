@@ -5,10 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Data
 public class DataResponse<T> {
     private String message;
     private int status;
@@ -18,5 +17,4 @@ public class DataResponse<T> {
         this.message = message;
         this.status = status;
     }
-
 }

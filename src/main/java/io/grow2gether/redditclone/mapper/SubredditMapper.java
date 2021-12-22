@@ -1,29 +1,29 @@
 package io.grow2gether.redditclone.mapper;
 
-
-import com.github.marlonlom.utilities.timeago.TimeAgo;
-import io.grow2gether.redditclone.dto.SubredditDto;
+import io.grow2gether.redditclone.dto.SubredditRequest;
+import io.grow2gether.redditclone.dto.SubredditResponse;
 import io.grow2gether.redditclone.model.Subreddit;
-import io.grow2gether.redditclone.model.User;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+import java.time.Instant;
+
+@Component
 public class SubredditMapper {
 
-    public SubredditDto mapToDto(Subreddit subreddit) {
-        return SubredditDto.builder()
-                .description(subreddit.getDescription())
-                .name(subreddit.getName())
-                .numberOfPosts(0)
+    public Subreddit mapToSubreddit(SubredditRequest subredditRequest) {
+        return Subreddit.builder()
+                .name(subredditRequest.getName())
+                .description(subredditRequest.getDescription())
+                .createdAt(Instant.now())
                 .build();
     }
 
-    public Subreddit mapToEntity(SubredditDto subredditDto, User user) {
-        return Subreddit.builder()
-                .createdAt(java.time.Instant.now())
-                .name(subredditDto.getName())
-                .user(user)
-                .description(subredditDto.getDescription())
+    public SubredditResponse mapToSubredditResponse(Subreddit subreddit) {
+        return SubredditResponse.builder()
+                .name(subreddit.getName())
+                .description(subreddit.getDescription())
+                .createdAt(subreddit.getCreatedAt())
+                .id(subreddit.getId())
                 .build();
     }
 }

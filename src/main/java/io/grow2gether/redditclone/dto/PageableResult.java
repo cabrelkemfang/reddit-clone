@@ -5,17 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Builder
-public class PageableResult<T> implements Serializable {
+public class PageableResult<T> {
     private int page;
     private int size;
     private long totalOfItems;
-    private int totalPage;
+    private int totalPages;
     private List<T> data;
 }

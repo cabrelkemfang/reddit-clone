@@ -1,10 +1,8 @@
 package io.grow2gether.redditclone.security;
 
-import io.grow2gether.redditclone.exceptions.SpringRedditException;
+import io.grow2gether.redditclone.exeption.SpringRedditException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -16,12 +14,9 @@ import java.security.*;
 import java.security.cert.CertificateException;
 
 @Service
-@Slf4j
 public class JwtProvider {
 
     private KeyStore keyStore;
-//    @Value("${jwt.expiration.time}")
-//    private Long jwtExpirationInMillis;
 
     @PostConstruct
     public void init() {
@@ -35,7 +30,7 @@ public class JwtProvider {
 
     }
 
-    public String generatedToken(Authentication authentication) {
+    public String generateToken(Authentication authentication) {
         User principal = (User) authentication.getPrincipal();
         return Jwts.builder()
                 .setSubject(principal.getUsername())
@@ -43,38 +38,35 @@ public class JwtProvider {
                 .compact();
     }
 
-    public boolean validateToken(String jwt) {
-        System.out.println(jwt);
-        log.info(jwt);
-        Jwts.parserBuilder().setSigningKey(getPublickey()).build().parseClaimsJws(jwt);
-        return true;
-    }
-
     private PrivateKey getPrivateKey() {
         try {
             return (PrivateKey) keyStore.getKey("springblog", "secret".toCharArray());
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
-            throw new SpringRedditException("Exception occured while retrieving public key from keystore");
+            throw new SpringRedditException("Exception occurred while retrieving public key from keystore");
         }
     }
 
-    private PublicKey getPublickey() {
+    public boolean validateToken(String jwt) {
+        Jwts.parserBuilder().setSigningKey(getPublicKey());
+        return true;
+    }
+
+    private PublicKey getPublicKey() {
         try {
             return keyStore.getCertificate("springblog").getPublicKey();
         } catch (KeyStoreException e) {
-            throw new SpringRedditException("Exception occured while " +
-                    "retrieving public key from keystore");
+            throw new SpringRedditException("Exception occurred while retrieving public key from keystore");
         }
     }
 
-    public String getUsernameFromJwt(String token) {
+   public String getUsernameFormJwt(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getPublickey())
+                .setSigningKey(getPublicKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
         return claims.getSubject();
+
     }
 
 }

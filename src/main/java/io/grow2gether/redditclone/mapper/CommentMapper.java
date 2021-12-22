@@ -5,29 +5,29 @@ import io.grow2gether.redditclone.dto.CommentResponse;
 import io.grow2gether.redditclone.model.Comment;
 import io.grow2gether.redditclone.model.Post;
 import io.grow2gether.redditclone.model.User;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 
-@Service
+@Component
 public class CommentMapper {
 
-    public Comment mapToEntity(CommentRequest commentRequest, Post post, User user) {
+    public Comment mapToComment(CommentRequest commentRequest, Post post, User user) {
         return Comment.builder()
                 .post(post)
-                .text(commentRequest.getText())
                 .user(user)
+                .text(commentRequest.getComment())
                 .createdAt(Instant.now())
                 .build();
     }
 
-    public static CommentResponse mapToDto(Comment comment) {
+    public CommentResponse mapToCommentResponse(Comment comment) {
         return CommentResponse.builder()
-                .id(comment.getId())
-                .createdAt(comment.getCreatedAt().toString())
+                .id(comment.getCommentId())
+                .comment(comment.getText())
+                .postName(comment.getPost().getPostName())
                 .userName(comment.getUser().getUsername())
-                .text(comment.getText())
-                .post_id(comment.getPost().getPostId())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }

@@ -13,8 +13,8 @@ import java.time.Instant;
 @Builder
 public class CommentResponse {
     private Long id;
-    private Long post_id;
-    private String text;
-    private String createdAt;
+    private String postName;
+    private String comment;
     private String userName;
+    private Instant createdAt;
 }

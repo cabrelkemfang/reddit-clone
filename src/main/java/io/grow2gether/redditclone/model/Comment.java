@@ -6,23 +6,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-@Data
 @Entity
-@Builder
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long commentId;
+
+    @NotEmpty
     private String text;
-    @ManyToOne(fetch =FetchType.LAZY)
-    @JoinColumn(name = "postId",referencedColumnName = "postId")
-    private Post post;
-    private Instant createdAt;
+
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId",referencedColumnName = "userId")
+    @JoinColumn(name = "postId", referencedColumnName = "postId")
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "useId", referencedColumnName = "userId")
     private User user;
+
+    private Instant createdAt;
 }

@@ -8,23 +8,26 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
-import java.util.List;
 
-@Data
 @Entity
-@Builder
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Subreddit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @NotBlank
+
+    @NotBlank(message = "Community Name is required")
     private String name;
-    @NotBlank
+
+    @NotBlank(message = "Description is required")
     private String description;
-    private Instant createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId",referencedColumnName = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
+
+    private Instant createdAt;
 }

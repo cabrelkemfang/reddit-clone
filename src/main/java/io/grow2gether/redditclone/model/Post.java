@@ -1,37 +1,45 @@
 package io.grow2gether.redditclone.model;
 
+import io.swagger.models.auth.In;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
-@Data
 @Entity
-@Builder
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long postId;
-    @NotBlank
+
+    @NotBlank(message = "Post name cannot be empty or Null")
     private String postName;
+
     @Nullable
     private String url;
+
     @Nullable
     @Lob
     private String description;
-    private Integer voteCount = 0;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    private Instant createdAt;
+
+    private Integer voteCount;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User user;
-    private Instant createdAt;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subredditId", referencedColumnName = "id")
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private Subreddit subreddit;
 }

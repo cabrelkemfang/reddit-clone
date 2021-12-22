@@ -1,11 +1,8 @@
 package io.grow2gether.redditclone.service;
 
-
-import io.grow2gether.redditclone.dto.DataResponse;
-import io.grow2gether.redditclone.dto.PageableResult;
 import io.grow2gether.redditclone.dto.PostRequest;
 import io.grow2gether.redditclone.dto.PostResponse;
-import io.grow2gether.redditclone.exceptions.SpringRedditException;
+import io.grow2gether.redditclone.exeption.SpringRedditException;
 import io.grow2gether.redditclone.mapper.PostMapper;
 import io.grow2gether.redditclone.model.Post;
 import io.grow2gether.redditclone.model.Subreddit;
@@ -14,69 +11,57 @@ import io.grow2gether.redditclone.repository.PostRepository;
 import io.grow2gether.redditclone.repository.SubredditRepository;
 import io.grow2gether.redditclone.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
+@AllArgsConstructor
 public class PostService {
-    private final SubredditRepository subredditRepository;
-    private AuthService authService;
-    private final PostMapper postMapper;
+
     private final PostRepository postRepository;
+    private final SubredditRepository subredditRepository;
+    private final PostMapper postMapper;
+    private final AuthService authService;
     private final UserRepository userRepository;
 
     @Transactional
-    public DataResponse<Void> save(PostRequest postRequest) {
-        Subreddit subreddit = this.subredditRepository.findByName(postRequest.getSubredditName())
+    public void createPost(PostRequest postRequest) {
+        Subreddit subreddit = subredditRepository.findByName(postRequest.getSubredditName())
                 .orElseThrow(() -> new SpringRedditException("Subreddit not found"));
-
-        this.postRepository.save(postMapper.map(postRequest, subreddit, authService.getCurrentUser()));
-        return new DataResponse<>("Post Created Successfully", HttpStatus.CREATED.value());
+        postRepository.save(postMapper.mapToPost(postRequest, subreddit, authService.getCurrentUser()));
     }
 
-    public DataResponse<PostResponse> getPost(Long id) {
-        Post post = this.postRepository.findById(id).orElseThrow(() -> new SpringRedditException("Post Not Fount"));
-        return new DataResponse<>("Post Load Successfully", HttpStatus.OK.value(), postMapper.mapToDto(post));
-    }
-
-    public PageableResult<PostResponse> getAllPosts(int page, int size) {
-        Page<Post> posts = this.postRepository.findAll(PageRequest.of(page - 1, size));
-        return new PageableResult<>(page,
-                size,
-                posts.getTotalElements(),
-                posts.getTotalPages(),
-                posts.getContent().stream().map(postMapper::mapToDto).collect(Collectors.toList()));
-    }
-
-    public List<PostResponse> getPostByUsername(String username) {
-        User user = this.userRepository.findByUsername(username).orElseThrow(() -> new SpringRedditException("User Not Found"));
-
-        return this.postRepository.findAllByUser(user)
-                .stream()
-                .map(postMapper::mapToDto)
+    @Transactional(readOnly = true)
+    public List<PostResponse> getAll() {
+        return postRepository.findAll().stream()
+                .map(postMapper::mapToPostResponse)
                 .collect(Collectors.toList());
     }
 
-    public PageableResult<PostResponse> getPostBySubreddit(int page, int size, Long subredditId) {
-        Subreddit subreddit = this.subredditRepository.findById(subredditId)
-                .orElseThrow(() -> new SpringRedditException("Subreddit not found"));
+    @Transactional(readOnly = true)
+    public PostResponse getPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new SpringRedditException("Post not found"));
+        return postMapper.mapToPostResponse(post);
+    }
 
-        Page<Post> posts = this.postRepository.findAllBySubreddit(subreddit, PageRequest.of(page - 1, size));
+    public List<PostResponse> getPostBySubreddit(Long subredditId) {
+        Subreddit subreddit = subredditRepository.findById(subredditId)
+                .orElseThrow(() -> new SpringRedditException("subreddit not found"));
 
-        return new PageableResult<>(page,
-                size,
-                posts.getTotalElements(),
-                posts.getTotalPages(),
-                posts.getContent().stream().map(postMapper::mapToDto).collect(Collectors.toList()));
+        return postRepository.findBySubreddit(subreddit).stream()
+                .map(postMapper::mapToPostResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getAllPostsByUsername(String username) {
+        User user = this.userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return postRepository.findByUser(user).stream()
+                .map(postMapper::mapToPostResponse)
+                .collect(Collectors.toList());
     }
 }
