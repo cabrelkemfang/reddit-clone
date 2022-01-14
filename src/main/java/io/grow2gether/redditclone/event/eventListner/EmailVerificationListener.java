@@ -2,7 +2,6 @@ package io.grow2gether.redditclone.event.eventListner;
 
 import io.grow2gether.redditclone.dto.NotificationEmail;
 import io.grow2gether.redditclone.event.UserRegistrationEvent;
-import io.grow2gether.redditclone.exeption.SpringRedditException;
 import io.grow2gether.redditclone.model.User;
 import io.grow2gether.redditclone.model.VerificationToken;
 import io.grow2gether.redditclone.repository.VerificationRepository;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 

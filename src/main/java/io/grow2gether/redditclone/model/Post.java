@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 
@@ -31,6 +32,7 @@ public class Post {
     @Lob
     private String description;
 
+    @Future
     private Instant createdAt;
 
     private Integer voteCount;

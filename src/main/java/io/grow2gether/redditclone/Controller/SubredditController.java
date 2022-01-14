@@ -8,6 +8,7 @@ import io.grow2gether.redditclone.dto.SubredditResponse;
 import io.grow2gether.redditclone.model.Subreddit;
 import io.grow2gether.redditclone.service.SubredditService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/subreddit")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SubredditController {
 
     private final SubredditService subredditService;

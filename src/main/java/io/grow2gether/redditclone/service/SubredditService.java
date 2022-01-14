@@ -7,6 +7,7 @@ import io.grow2gether.redditclone.mapper.SubredditMapper;
 import io.grow2gether.redditclone.model.Subreddit;
 import io.grow2gether.redditclone.repository.SubredditRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SubredditService {
 
     private final SubredditRepository subredditRepository;
